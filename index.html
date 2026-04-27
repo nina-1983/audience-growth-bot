@@ -54,6 +54,10 @@
     flex-shrink: 0;
   }
 
+  .header-text {
+    flex: 1;
+  }
+
   .header-text .name {
     font-size: 15px;
     font-weight: 600;
@@ -65,6 +69,25 @@
     font-size: 12px;
     color: rgba(255,255,255,0.75);
     margin-top: 2px;
+  }
+
+  .restart-btn {
+    font-family: 'Montserrat', sans-serif;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.85);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .restart-btn:hover {
+    background: rgba(255,255,255,0.25);
+    color: #fff;
   }
 
   .messages {
@@ -265,6 +288,7 @@
       <div class="name">Audience Growth Bot</div>
       <div class="subtitle">by Nina Mistry</div>
     </div>
+    <button class="restart-btn" onclick="startAgain()">Start again</button>
   </div>
 
   <div class="messages" id="messages">
@@ -284,10 +308,6 @@
   </div>
 
   <div class="voice-status" id="voiceStatus">🎙️ Listening...</div>
-
-  <div class="start-again">
-    <button onclick="startAgain()">Start again</button>
-  </div>
 
   <div class="input-row">
     <textarea id="userInput" rows="1" placeholder="Type your message..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"></textarea>
