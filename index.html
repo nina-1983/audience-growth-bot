@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audience Growth Bot – by Nina Mistry</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: #f9f8f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 16px;
+  }
+
+  .chat-wrapper {
+    width: 100%;
+    max-width: 680px;
+    height: 90vh;
+    max-height: 780px;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #e4e1db;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 4px 32px rgba(50, 106, 179, 0.08);
+  }
+
+  .header {
+    background: #326ab3;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .header-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #85d0cd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .header-text .name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.01em;
+  }
+
+  .header-text .subtitle {
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    margin-top: 2px;
+  }
+
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 20px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    scroll-behavior: smooth;
+  }
+
+  .msg {
+    max-width: 82%;
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-size: 14px;
+    line-height: 1.55;
+    word-wrap: break-word;
+  }
+
+  .msg.bot {
+    align-self: flex-start;
+    background: #eef4fb;
+    color: #1a2a3a;
+    border-bottom-left-radius: 4px;
+  }
+
+  .msg.user {
+    align-self: flex-end;
+    background: #326ab3;
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+
+  .msg.bot strong { font-weight: 600; }
+
+  .starter-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 4px 0;
+  }
+
+  .qr-btn {
+    font-family: 'Montserrat', sans-serif;
+    background: #fff;
+    border: 1.5px solid #326ab3;
+    color: #326ab3;
+    padding: 11px 16px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s ease;
+  }
+
+  .qr-btn:hover {
+    background: #326ab3;
+    color: #fff;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 8px;
+    padding: 14px 16px;
+    border-top: 1px solid #e4e1db;
+    background: #fff;
+  }
+
+  textarea {
+    flex: 1;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    padding: 10px 14px;
+    border: 1.5px solid #d6d3cc;
+    border-radius: 10px;
+    resize: none;
+    outline: none;
+    min-height: 42px;
+    max-height: 120px;
+    line-height: 1.4;
+    background: #fafaf9;
+  }
+
+  textarea:focus { border-color: #326ab3; }
+
+  .send-btn {
+    background: #326ab3;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 0 18px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+  }
+
+  .send-btn:hover { background: #28578f; }
+  .send-btn:disabled { background: #b0c4de; cursor: not-allowed; }
+
+  .typing-indicator {
+    align-self: flex-start;
+    padding: 12px 16px;
+    background: #eef4fb;
+    border-radius: 14px;
+    border-bottom-left-radius: 4px;
+    display: none;
+  }
+
+  .typing-indicator span {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background: #8eaed4;
+    border-radius: 50%;
+    margin-right: 4px;
+    animation: bounce 1.2s infinite ease-in-out;
+  }
+
+  .typing-indicator span:nth-child(2) { animation-delay: 0.15s; }
+  .typing-indicator span:nth-child(3) { animation-delay: 0.3s; margin-right: 0; }
+
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-5px); }
+  }
+
+  .start-again {
+    text-align: center;
+    padding: 8px 0 4px;
+  }
+
+  .start-again button {
+    font-family: 'Montserrat', sans-serif;
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .start-again button:hover { color: #326ab3; }
+</style>
+</head>
+<body>
+<div class="chat-wrapper">
+  <div class="header">
+    <div class="header-avatar">N</div>
+    <div class="header-text">
+      <div class="name">Audience Growth Bot</div>
+      <div class="subtitle">by Nina Mistry</div>
+    </div>
+  </div>
+
+  <div class="messages" id="messages">
+    <div class="msg bot">
+      Hey — welcome. 👋<br><br>
+      I'm here to help you get clear on one simple thing you can create to start bringing the right people into your world.<br><br>
+      No overwhelm. No list of ten ideas. Just clarity.<br><br>
+      <strong>Where are you at right now?</strong>
+      <div class="starter-buttons" id="starters">
+        <button class="qr-btn" onclick="pickStarter(this)">😅 I keep putting this off — help me just pick something</button>
+        <button class="qr-btn" onclick="pickStarter(this)">🤯 I'm overwhelmed with options and need someone to simplify it</button>
+        <button class="qr-btn" onclick="pickStarter(this)">💡 I have an idea but I'm not sure if it's the right one</button>
+        <button class="qr-btn" onclick="pickStarter(this)">🙋 I have no idea where to start with a lead magnet</button>
+      </div>
+    </div>
+    <div class="typing-indicator" id="typing"><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="input-row">
+    <textarea id="userInput" rows="1" placeholder="Type your message..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"></textarea>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+const messagesEl = document.getElementById("messages");
+const typingEl = document.getElementById("typing");
+const inputEl = document.getElementById("userInput");
+const sendBtn = document.getElementById("sendBtn");
+
+let conversationHistory = [];
+let isLoading = false;
+
+function pickStarter(btn) {
+  const text = btn.textContent;
+  document.getElementById("starters").remove();
+  sendMessage(text);
+}
+
+async function sendMessage(overrideText) {
+  const text = (overrideText || inputEl.value).trim();
+  if (!text || isLoading) return;
+
+  inputEl.value = "";
+  isLoading = true;
+  sendBtn.disabled = true;
+
+  appendMessage(text, "user");
+  conversationHistory.push({ role: "user", content: text });
+
+  typingEl.style.display = "block";
+  scrollToBottom();
+
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: conversationHistory })
+    });
+
+    const data = await res.json();
+    const reply = data.reply || "Something went wrong — try again.";
+
+    conversationHistory.push({ role: "assistant", content: reply });
+    typingEl.style.display = "none";
+    appendMessage(reply, "bot");
+
+  } catch (err) {
+    typingEl.style.display = "none";
+    appendMessage("Something went wrong — try again.", "bot");
+  }
+
+  isLoading = false;
+  sendBtn.disabled = false;
+  scrollToBottom();
+}
+
+function appendMessage(text, role) {
+  const div = document.createElement("div");
+  div.className = "msg " + role;
+
+  if (role === "bot") {
+    div.innerHTML = formatBot(text);
+  } else {
+    div.textContent = text;
+  }
+
+  messagesEl.insertBefore(div, typingEl);
+  scrollToBottom();
+}
+
+function formatBot(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\n/g, "<br>");
+}
+
+function scrollToBottom() {
+  requestAnimationFrame(() => {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  });
+}
+
+inputEl.addEventListener("input", function() {
+  this.style.height = "auto";
+  this.style.height = Math.min(this.scrollHeight, 120) + "px";
+});
+</script>
+</body>
+</html>
