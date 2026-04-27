@@ -269,21 +269,25 @@
 
   <div class="messages" id="messages">
     <div class="msg bot">
-      Hey there, welcome.<br><br>
+      Hey, welcome. 👋<br><br>
       I'm here to help you figure out how to get the right people into your world, so that when you're ready to sell, they're already paying attention.<br><br>
       No overwhelm. No ten-step plan. Just clarity.<br><br>
       <strong>Where are you at right now?</strong>
       <div class="starter-buttons" id="starters">
-        <button class="qr-btn" onclick="pickStarter(this)">I want to grow my audience but I don't know where to start</button>
-        <button class="qr-btn" onclick="pickStarter(this)">I'm putting myself out there but the right people aren't finding me</button>
-        <button class="qr-btn" onclick="pickStarter(this)">I know what I sell but I don't know how to get people through the door</button>
-        <button class="qr-btn" onclick="pickStarter(this)">I've tried a few things and nothing's really stuck</button>
+        <button class="qr-btn" onclick="pickStarter(this)">🌱 I want to grow my audience but I don't know where to start</button>
+        <button class="qr-btn" onclick="pickStarter(this)">😩 I'm putting myself out there but the right people aren't finding me</button>
+        <button class="qr-btn" onclick="pickStarter(this)">🤔 I know what I sell but I don't know how to get people through the door</button>
+        <button class="qr-btn" onclick="pickStarter(this)">🔄 I've tried a few things and nothing's really stuck</button>
       </div>
     </div>
     <div class="typing-indicator" id="typing"><span></span><span></span><span></span></div>
   </div>
 
   <div class="voice-status" id="voiceStatus">🎙️ Listening...</div>
+
+  <div class="start-again">
+    <button onclick="startAgain()">Start again</button>
+  </div>
 
   <div class="input-row">
     <textarea id="userInput" rows="1" placeholder="Type your message..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"></textarea>
@@ -376,6 +380,25 @@ function toggleVoice() {
     voiceStatus.textContent = "🎙️ Listening...";
     voiceStatus.classList.add("active");
   }
+}
+
+function startAgain() {
+  conversationHistory = [];
+  messagesEl.innerHTML = `
+    <div class="msg bot">
+      Hey, welcome. 👋<br><br>
+      I'm here to help you figure out how to get the right people into your world, so that when you're ready to sell, they're already paying attention.<br><br>
+      No overwhelm. No ten-step plan. Just clarity.<br><br>
+      <strong>Where are you at right now?</strong>
+      <div class="starter-buttons" id="starters">
+        <button class="qr-btn" onclick="pickStarter(this)">🌱 I want to grow my audience but I don't know where to start</button>
+        <button class="qr-btn" onclick="pickStarter(this)">😩 I'm putting myself out there but the right people aren't finding me</button>
+        <button class="qr-btn" onclick="pickStarter(this)">🤔 I know what I sell but I don't know how to get people through the door</button>
+        <button class="qr-btn" onclick="pickStarter(this)">🔄 I've tried a few things and nothing's really stuck</button>
+      </div>
+    </div>
+    <div class="typing-indicator" id="typing"><span></span><span></span><span></span></div>
+  `;
 }
 
 initVoice();
