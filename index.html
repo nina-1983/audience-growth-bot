@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Audience Growth Bot – by Nina Mistry</title>
+<title>Ask Nina – Grow your audience, your way</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -278,15 +278,30 @@
   .voice-status.active {
     display: block;
   }
+
+  .voice-hint {
+    font-size: 12px;
+    color: #8a8a8a;
+    font-style: italic;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 10px 16px;
+    font-size: 11px;
+    color: #aaa;
+    border-top: 1px solid #e4e1db;
+    letter-spacing: 0.02em;
+  }
 </style>
 </head>
 <body>
 <div class="chat-wrapper">
   <div class="header">
-    <div class="header-avatar">N</div>
+    <div class="header-avatar">♥</div>
     <div class="header-text">
-      <div class="name">Audience Growth Bot</div>
-      <div class="subtitle">by Nina Mistry</div>
+      <div class="name">Ask Nina</div>
+      <div class="subtitle">Grow your audience, your way</div>
     </div>
     <button class="restart-btn" onclick="startAgain()">Start again</button>
   </div>
@@ -294,8 +309,9 @@
   <div class="messages" id="messages">
     <div class="msg bot">
       Hey, welcome. 👋<br><br>
-      I'm here to help you figure out how to get the right people into your world, so that when you're ready to sell, they're already paying attention.<br><br>
+      Chat to Nina and figure out how to get the right people into your world, so that when you're ready to sell, they're already paying attention.<br><br>
       No overwhelm. No ten-step plan. Just clarity.<br><br>
+      <span class="voice-hint">You can type or tap the mic to voice note your answers.</span><br><br>
       <strong>Where are you at right now?</strong>
       <div class="starter-buttons" id="starters">
         <button class="qr-btn" onclick="pickStarter(this)">🌱 I want to grow my audience but I don't know where to start</button>
@@ -319,6 +335,7 @@
     </button>
     <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
   </div>
+  <div class="footer">Nina Mistry · grow your audience, your way</div>
 </div>
 
 <script>
@@ -407,8 +424,9 @@ function startAgain() {
   messagesEl.innerHTML = `
     <div class="msg bot">
       Hey, welcome. 👋<br><br>
-      I'm here to help you figure out how to get the right people into your world, so that when you're ready to sell, they're already paying attention.<br><br>
+      Chat to Nina and figure out how to get the right people into your world, so that when you're ready to sell, they're already paying attention.<br><br>
       No overwhelm. No ten-step plan. Just clarity.<br><br>
+      <span class="voice-hint">You can type or tap the mic to voice note your answers.</span><br><br>
       <strong>Where are you at right now?</strong>
       <div class="starter-buttons" id="starters">
         <button class="qr-btn" onclick="pickStarter(this)">🌱 I want to grow my audience but I don't know where to start</button>
