@@ -442,7 +442,13 @@ function appendMessage(text, role) {
 
 function formatBot(text) {
   return text
+    .replace(/\u2014/g, ",")
+    .replace(/^---+$/gm, "")
+    .replace(/^___+$/gm, "")
+    .replace(/^\*\*\*+$/gm, "")
+    .replace(/^#{1,6}\s+/gm, "")
     .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\n{3,}/g, "\n\n")
     .replace(/\n/g, "<br>");
 }
 
