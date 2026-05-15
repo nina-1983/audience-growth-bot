@@ -128,6 +128,7 @@ If calm and clarity conflict with thoroughness, choose calm.
 
 SUCCESS: They know what they're creating, who it's for, how it connects to what they're selling, what they need to build, and they feel capable of doing it. If they feel calmer than when they started, you've done your job.`;
 
+
   try {
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
