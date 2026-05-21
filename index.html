@@ -397,6 +397,9 @@
 const messagesEl = document.getElementById("messages");
 let typingEl = document.getElementById("typing");
 const inputEl = document.getElementById("userInput");
+const sendBtn = document.getElementById("sendBtn");
+
+let isLoading = false;
 
 function adjustTextarea() {
   inputEl.style.height = "auto";
@@ -423,9 +426,13 @@ function scrollToBottom() {
 }
 
 async function sendMessage() {
+
   const text = inputEl.value.trim();
 
-  if (!text) return;
+  if (!text || isLoading) return;
+
+  isLoading = true;
+  sendBtn.disabled = true;
 
   appendMessage(text, "user");
 
@@ -434,14 +441,46 @@ async function sendMessage() {
 
   typingEl.style.display = "block";
 
-  setTimeout(() => {
+  try {
+
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        messages: [
+          {
+            role: "user",
+            content: text
+          }
+        ]
+      })
+    });
+
+    const data = await response.json();
+
     typingEl.style.display = "none";
 
     appendMessage(
-      "Okay, good — let's keep this simple. Tell me a bit more about what's going on.",
+      data.reply || "Something went wrong. Try again.",
       "bot"
     );
-  }, 900);
+
+  } catch (error) {
+
+    typingEl.style.display = "none";
+
+    appendMessage(
+      "Something went wrong connecting to the assistant.",
+      "bot"
+    );
+
+    console.error(error);
+  }
+
+  isLoading = false;
+  sendBtn.disabled = false;
 }
 
 function saveTranscript() {
