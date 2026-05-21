@@ -1,415 +1,202 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Audience Growth Bot</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background: #edf4f6;
-      font-family: Inter, sans-serif;
-      display: flex;
-      justify-content: center;
-      min-height: 100vh;
-      color: #17323d;
-    }
-
-    .app {
-      width: 100%;
-      max-width: 620px;
-      min-height: 100vh;
-      background: #f6fbfc;
-      display: flex;
-      flex-direction: column;
-      border-left: 1px solid #d8e7eb;
-      border-right: 1px solid #d8e7eb;
-    }
-
-    .header {
-      background: linear-gradient(180deg, #144a93 0%, #1f5fb4 100%);
-      color: white;
-      padding: 34px 30px 26px;
-    }
-
-    .header h1 {
-      margin: 0;
-      font-size: 44px;
-      line-height: 1;
-      letter-spacing: -2px;
-      font-weight: 700;
-    }
-
-    .header p {
-      margin-top: 16px;
-      font-size: 17px;
-      line-height: 1.6;
-      opacity: 0.95;
-      max-width: 500px;
-    }
-
-    .messages {
-      flex: 1;
-      padding: 26px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .message {
-      max-width: 88%;
-      border-radius: 24px;
-      padding: 20px 22px;
-      font-size: 16px;
-      line-height: 1.8;
-      white-space: pre-wrap;
-    }
-
-    .assistant {
-      background: white;
-      border: 1px solid #dbe8ec;
-      align-self: flex-start;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    }
-
-    .user {
-      background: #d8f0f2;
-      border: 1px solid #c0e2e6;
-      align-self: flex-end;
-    }
-
-    .input-area {
-      padding: 20px;
-      border-top: 1px solid #dbe8ec;
-      background: white;
-    }
-
-    .input-wrap {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .voice-btn {
-      width: 56px;
-      height: 56px;
-      border-radius: 18px;
-      border: none;
-      background: #dff1f4;
-      color: #144a93;
-      font-size: 22px;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: 0.2s ease;
-    }
-
-    .voice-btn:hover {
-      transform: translateY(-1px);
-    }
-
-    .voice-btn.recording {
-      background: #144a93;
-      color: white;
-      animation: pulse 1s infinite;
-    }
-
-    textarea {
-      flex: 1;
-      resize: none;
-      border: 1px solid #d2e2e7;
-      border-radius: 20px;
-      padding: 18px 20px;
-      min-height: 58px;
-      max-height: 180px;
-      font-size: 16px;
-      line-height: 1.5;
-      font-family: inherit;
-      outline: none;
-      background: #f9fcfd;
-      color: #17323d;
-    }
-
-    textarea::placeholder {
-      color: #6f8891;
-    }
-
-    .send-btn {
-      border: none;
-      background: #144a93;
-      color: white;
-      border-radius: 18px;
-      padding: 0 24px;
-      height: 56px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    .send-btn:hover {
-      background: #103c77;
-    }
-
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-      }
-
-      50% {
-        transform: scale(1.06);
-      }
-
-      100% {
-        transform: scale(1);
-      }
-    }
-
-    @media (max-width: 640px) {
-
-      .header {
-        padding: 28px 22px 22px;
-      }
-
-      .header h1 {
-        font-size: 34px;
-      }
-
-      .header p {
-        font-size: 15px;
-      }
+<script>
+const messagesEl = document.getElementById("messages");
+let typingEl = document.getElementById("typing");
+const inputEl = document.getElementById("userInput");
+const micBtn = document.getElementById("micBtn");
 
-      .messages {
-        padding: 18px;
-      }
+let recognition;
+let isRecording = false;
 
-      .message {
-        font-size: 15px;
-        padding: 18px;
-      }
+function adjustTextarea() {
+  inputEl.style.height = "auto";
+  inputEl.style.height =
+    Math.min(inputEl.scrollHeight, 110) + "px";
+}
 
-      .input-area {
-        padding: 16px;
-      }
+function pickStarter(btn) {
+  inputEl.value = btn.textContent;
+  sendMessage();
+}
 
-      textarea {
-        font-size: 15px;
-      }
+function appendMessage(text, role) {
 
-      .voice-btn {
-        width: 52px;
-        height: 52px;
-      }
+  const div = document.createElement("div");
 
-      .send-btn {
-        height: 52px;
-        padding: 0 18px;
-      }
+  div.className = "msg " + role;
 
-    }
-  </style>
-</head>
+  div.innerHTML = text.replace(/\n/g, "<br>");
 
-<body>
+  messagesEl.insertBefore(div, typingEl);
 
-  <div class="app">
+  scrollToBottom();
 
-    <div class="header">
-      <h1>Audience Growth Bot</h1>
+}
 
-      <p>
-        Okay. Let’s stop trying to solve all of it at once and figure out what actually matters first.
-      </p>
-    </div>
+function scrollToBottom() {
 
-    <div class="messages" id="messages">
+  requestAnimationFrame(() => {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  });
 
-      <div class="message assistant">
-You probably don’t need more ideas right now.
+}
 
-You need a bit more clarity around what’s actually creating movement.
-      </div>
+async function sendMessage() {
 
-    </div>
+  const text = inputEl.value.trim();
 
-    <div class="input-area">
+  if (!text) return;
 
-      <div class="input-wrap">
+  appendMessage(text, "user");
 
-        <button class="voice-btn" id="voiceBtn">
-          🎤
-        </button>
+  inputEl.value = "";
 
-        <textarea
-          id="messageInput"
-          placeholder="Tell me what feels messy right now..."
-        ></textarea>
+  adjustTextarea();
 
-        <button class="send-btn" id="sendBtn">
-          Send
-        </button>
+  typingEl.style.display = "block";
 
-      </div>
+  try {
 
-    </div>
-
-  </div>
-
-  <script>
-
-    const messages = document.getElementById("messages");
-    const input = document.getElementById("messageInput");
-    const sendBtn = document.getElementById("sendBtn");
-    const voiceBtn = document.getElementById("voiceBtn");
-
-    let conversation = [];
-
-    function addMessage(content, role) {
-
-      const div = document.createElement("div");
-
-      div.className = `message ${role}`;
-
-      div.textContent = content;
-
-      messages.appendChild(div);
-
-      messages.scrollTop = messages.scrollHeight;
-
-    }
-
-    async function sendMessage() {
-
-      const text = input.value.trim();
-
-      if (!text) return;
-
-      addMessage(text, "user");
-
-      conversation.push({
-        role: "user",
-        content: text
-      });
-
-      input.value = "";
-
-      try {
-
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            messages: conversation
-          })
-        });
-
-        const data = await response.json();
-
-        addMessage(data.reply, "assistant");
-
-        conversation.push({
-          role: "assistant",
-          content: data.reply
-        });
-
-      } catch (error) {
-
-        console.error(error);
-
-        addMessage(
-          "Something went wrong. Try again in a second.",
-          "assistant"
-        );
-
-      }
-
-    }
-
-    sendBtn.addEventListener("click", sendMessage);
-
-    input.addEventListener("keydown", (e) => {
-
-      if (e.key === "Enter" && !e.shiftKey) {
-
-        e.preventDefault();
-
-        sendMessage();
-
-      }
-
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        messages: [
+          {
+            role: "user",
+            content: text
+          }
+        ]
+      })
     });
 
-    // VOICE MODE
+    const data = await response.json();
 
-    const SpeechRecognition =
-      window.SpeechRecognition ||
-      window.webkitSpeechRecognition;
+    typingEl.style.display = "none";
 
-    if (SpeechRecognition) {
+    appendMessage(
+      data.reply ||
+      "Something went wrong. Try again in a second.",
+      "bot"
+    );
 
-      const recognition = new SpeechRecognition();
+  } catch (error) {
 
-      recognition.lang = "en-GB";
-      recognition.interimResults = false;
-      recognition.continuous = false;
+    console.error(error);
 
-      voiceBtn.addEventListener("click", () => {
+    typingEl.style.display = "none";
 
-        recognition.start();
+    appendMessage(
+      "Something went wrong. Try again in a second.",
+      "bot"
+    );
 
-        voiceBtn.classList.add("recording");
+  }
 
-      });
+}
 
-      recognition.onresult = (event) => {
+function saveTranscript() {
+  alert("Transcript saved.");
+}
 
-        const transcript =
-          event.results[0][0].transcript;
+function startAgain() {
+  location.reload();
+}
 
-        input.value = transcript;
+// REAL VOICE MODE
 
-        voiceBtn.classList.remove("recording");
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
 
-      };
+if (SpeechRecognition) {
 
-      recognition.onerror = (event) => {
+  recognition = new SpeechRecognition();
 
-        console.error(event.error);
+  recognition.lang = "en-GB";
 
-        voiceBtn.classList.remove("recording");
+  recognition.interimResults = false;
 
-        alert(
-          "Voice recognition error. Try Chrome."
-        );
+  recognition.continuous = false;
 
-      };
+  recognition.onstart = () => {
 
-      recognition.onend = () => {
+    isRecording = true;
 
-        voiceBtn.classList.remove("recording");
+    micBtn.style.background = "#326ab3";
 
-      };
+    micBtn.style.borderColor = "#326ab3";
 
-    } else {
+    micBtn.querySelector("svg").style.fill = "#fff";
 
-      voiceBtn.addEventListener("click", () => {
+  };
 
-        alert(
-          "Voice recognition is not supported in this browser. Try Chrome."
-        );
+  recognition.onend = () => {
 
-      });
+    isRecording = false;
 
-    }
+    micBtn.style.background = "#fff";
 
-  </script>
+    micBtn.style.borderColor =
+      "rgba(50,106,179,0.15)";
 
-</body>
-</html>
+    micBtn.querySelector("svg").style.fill =
+      "#326ab3";
+
+  };
+
+  recognition.onerror = (event) => {
+
+    console.error(event.error);
+
+    isRecording = false;
+
+    micBtn.style.background = "#fff";
+
+    micBtn.querySelector("svg").style.fill =
+      "#326ab3";
+
+    alert(
+      "Voice recognition error. Try Chrome."
+    );
+
+  };
+
+  recognition.onresult = (event) => {
+
+    const transcript =
+      event.results[0][0].transcript;
+
+    inputEl.value = transcript;
+
+    adjustTextarea();
+
+  };
+
+}
+
+function toggleVoice() {
+
+  if (!SpeechRecognition) {
+
+    alert(
+      "Voice recognition is not supported in this browser. Try Chrome."
+    );
+
+    return;
+
+  }
+
+  if (isRecording) {
+
+    recognition.stop();
+
+  } else {
+
+    recognition.start();
+
+  }
+
+}
+</script>
