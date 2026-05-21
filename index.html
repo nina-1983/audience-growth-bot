@@ -2,499 +2,338 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#326ab3" />
-  <title>Ask Nina – Grow your audience, your way</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>Audience Growth Bot</title>
 
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
     }
 
     body {
-      font-family: 'Montserrat', sans-serif;
-      background: #f5f4f1;
-      color: #1a2a3a;
-    }
-
-    .page-shell {
-      width: 100%;
-      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #eef6f8;
+      font-family: Inter, sans-serif;
+      color: #16333d;
       display: flex;
       justify-content: center;
-      background: #f5f4f1;
+      min-height: 100vh;
     }
 
-    .app-container {
+    .app {
       width: 100%;
       max-width: 620px;
-      height: 100%;
-      background: #fff;
+      background: white;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      border-left: 1px solid rgba(50,106,179,0.15);
-      border-right: 1px solid rgba(50,106,179,0.15);
+      border-left: 1px solid #dbe8ec;
+      border-right: 1px solid #dbe8ec;
     }
 
     .header {
-      background: #326ab3;
-      padding: 16px 22px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
+      padding: 28px 24px 18px;
+      border-bottom: 1px solid #e7eff2;
+      background: linear-gradient(180deg, #144a93 0%, #1e5cab 100%);
+      color: white;
     }
 
-    .header-avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: #85d0cd;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: #fff;
-      flex-shrink: 0;
-    }
-
-    .header-text {
-      flex: 1;
-    }
-
-    .header-text .name {
-      font-size: 18px;
+    .header h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.05;
+      letter-spacing: -1px;
       font-weight: 700;
-      color: #fff;
-      line-height: 1.1;
     }
 
-    .header-text .subtitle {
-      font-size: 12px;
-      color: rgba(255,255,255,0.9);
-      margin-top: 2px;
-      font-style: italic;
-    }
-
-    .header-buttons {
-      display: flex;
-      gap: 6px;
-    }
-
-    .icon-btn {
-      border: 1px solid rgba(255,255,255,0.4);
-      background: transparent;
-      color: #fff;
-      border-radius: 999px;
-      padding: 7px 12px;
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      font-family: 'Montserrat', sans-serif;
-      transition: all 0.15s ease;
-    }
-
-    .icon-btn:hover {
-      background: rgba(255,255,255,0.12);
+    .header p {
+      margin-top: 10px;
+      opacity: 0.9;
+      line-height: 1.5;
+      font-size: 15px;
+      max-width: 500px;
     }
 
     .messages {
       flex: 1;
+      padding: 22px;
       overflow-y: auto;
-      padding: 18px 16px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      background: #fff;
-      border-bottom: 1px solid rgba(50,106,179,0.12);
-      -webkit-overflow-scrolling: touch;
+      gap: 14px;
+      background: #f7fbfc;
     }
 
-    .msg {
-      max-width: 82%;
+    .message {
+      max-width: 88%;
       padding: 14px 16px;
-      border-radius: 20px;
+      border-radius: 18px;
+      line-height: 1.6;
       font-size: 15px;
-      line-height: 1.55;
-      word-wrap: break-word;
-      animation: fadeIn 0.2s ease;
+      white-space: pre-wrap;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(5px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .msg.bot {
+    .assistant {
+      background: white;
+      border: 1px solid #dfecef;
       align-self: flex-start;
-      background: #eef4fb;
-      border: 1px solid rgba(50,106,179,0.12);
-      color: #1a2a3a;
     }
 
-    .msg.user {
+    .user {
+      background: #d8f3f4;
       align-self: flex-end;
-      background: #326ab3;
-      color: #fff;
+      border: 1px solid #b8e4e7;
     }
 
-    .starter-buttons {
+    .input-area {
+      padding: 18px;
+      border-top: 1px solid #dde9ed;
+      background: white;
+    }
+
+    .input-wrap {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-      max-width: 82%;
-    }
-
-    .qr-btn {
-      font-family: 'Montserrat', sans-serif;
-      background: #fff;
-      border: 1.5px solid #85d0cd;
-      color: #326ab3;
-      padding: 8px 14px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .qr-btn:hover {
-      background: #eef4fb;
-    }
-
-    .typing-indicator {
-      align-self: flex-start;
-      padding: 12px 14px;
-      background: #eef4fb;
-      border-radius: 20px;
-      border: 1px solid rgba(50,106,179,0.12);
-      display: none;
-    }
-
-    .typing-indicator span {
-      display: inline-block;
-      width: 5px;
-      height: 5px;
-      background: #85d0cd;
-      border-radius: 50%;
-      margin-right: 3px;
-      animation: bounce 1.2s infinite ease-in-out;
-    }
-
-    .typing-indicator span:nth-child(2) {
-      animation-delay: 0.15s;
-    }
-
-    .typing-indicator span:nth-child(3) {
-      animation-delay: 0.3s;
-      margin-right: 0;
-    }
-
-    @keyframes bounce {
-      0%, 60%, 100% {
-        transform: translateY(0);
-      }
-      30% {
-        transform: translateY(-3px);
-      }
-    }
-
-    .input-row {
-      display: flex;
-      gap: 8px;
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(50,106,179,0.12);
-      background: #fff;
-      align-items: flex-end;
-      flex-shrink: 0;
+      gap: 10px;
+      align-items: center;
     }
 
     textarea {
       flex: 1;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 14px;
-      padding: 11px 16px;
-      border: 1.5px solid rgba(50,106,179,0.15);
-      border-radius: 999px;
       resize: none;
+      border: 1px solid #cfe0e5;
+      border-radius: 16px;
+      padding: 14px;
+      font-size: 15px;
+      font-family: inherit;
       outline: none;
-      min-height: 48px;
-      max-height: 110px;
-      line-height: 1.4;
-      background: #fff;
+      min-height: 54px;
+      max-height: 180px;
+      line-height: 1.5;
+      background: #f9fcfd;
     }
 
-    textarea:focus {
-      border-color: #326ab3;
-    }
-
-    .mic-btn,
-    .send-btn {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s ease;
-      flex-shrink: 0;
-    }
-
-    .mic-btn {
-      border: 1.5px solid rgba(50,106,179,0.15);
-      background: #fff;
-    }
-
-    .mic-btn:hover {
-      border-color: #326ab3;
-      background: #eef4fb;
-    }
-
-    .mic-btn svg {
-      width: 18px;
-      height: 18px;
-      fill: #326ab3;
-    }
-
-    .send-btn {
-      background: #326ab3;
-      color: #fff;
+    button {
       border: none;
-      font-size: 18px;
+      cursor: pointer;
+      transition: 0.2s ease;
+      font-family: inherit;
+    }
+
+    .send-btn {
+      background: #144a93;
+      color: white;
+      padding: 14px 18px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
     }
 
     .send-btn:hover {
-      background: #285999;
+      background: #103c77;
     }
 
-    .footer-note {
-      text-align: center;
-      padding: 10px 14px;
-      font-size: 11px;
-      color: #9b9488;
-      line-height: 1.5;
-      border-bottom: 1px solid rgba(50,106,179,0.12);
-      background: #fff;
+    .voice-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      background: #dff4f6;
+      color: #144a93;
+      font-size: 20px;
+      flex-shrink: 0;
     }
 
-    .footer {
-      text-align: center;
-      padding: 10px 14px;
-      font-size: 10px;
-      color: #aaa39a;
-      letter-spacing: 0.08em;
-      background: #fff;
+    .voice-btn.recording {
+      background: #144a93;
+      color: white;
+      animation: pulse 1s infinite;
     }
 
-    @media (max-width: 760px) {
-      .app-container {
-        max-width: 100%;
-        border-left: none;
-        border-right: none;
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
       }
 
-      .msg {
-        max-width: 90%;
+      50% {
+        transform: scale(1.05);
       }
 
-      .starter-buttons {
-        max-width: 90%;
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .header h1 {
+        font-size: 28px;
+      }
+
+      .message {
+        font-size: 14px;
+      }
+
+      textarea {
+        font-size: 14px;
       }
     }
   </style>
 </head>
 
 <body>
-
-<div class="page-shell">
-  <div class="app-container">
+  <div class="app">
 
     <div class="header">
-      <div class="header-avatar">♥</div>
-
-      <div class="header-text">
-        <div class="name">Ask Nina</div>
-        <div class="subtitle">Grow your audience, your way</div>
-      </div>
-
-      <div class="header-buttons">
-        <button class="icon-btn" onclick="saveTranscript()">Save</button>
-        <button class="icon-btn" onclick="startAgain()">Start again</button>
-      </div>
+      <h1>Audience Growth Bot</h1>
+      <p>
+        Okay. Let’s stop trying to solve all of it at once and figure out what actually matters first.
+      </p>
     </div>
 
     <div class="messages" id="messages">
+      <div class="message assistant">
+        You probably don’t need more ideas right now.
 
-      <div class="msg bot">
-        Hey, let’s keep this simple. What are we looking at today? 💛
+        You need a bit more clarity around what’s actually creating movement.
       </div>
-
-      <div class="starter-buttons" id="starters">
-        <button class="qr-btn" onclick="pickStarter(this)">Grow my audience</button>
-        <button class="qr-btn" onclick="pickStarter(this)">Get the right people finding me</button>
-        <button class="qr-btn" onclick="pickStarter(this)">Get people through the door</button>
-        <button class="qr-btn" onclick="pickStarter(this)">Nothing’s really stuck yet</button>
-      </div>
-
-      <div class="typing-indicator" id="typing">
-        <span></span><span></span><span></span>
-      </div>
-
     </div>
 
-    <div class="input-row">
+    <div class="input-area">
+      <div class="input-wrap">
 
-      <textarea
-        id="userInput"
-        rows="1"
-        placeholder="Chat to Nina..."
-        oninput="adjustTextarea()"
-        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"
-      ></textarea>
+        <button class="voice-btn" id="voiceBtn">
+          🎤
+        </button>
 
-      <button class="mic-btn" id="micBtn" onclick="toggleVoice()">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5z"/>
-          <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
-        </svg>
-      </button>
+        <textarea
+          id="messageInput"
+          placeholder="Tell me what feels messy right now..."
+        ></textarea>
 
-      <button class="send-btn" id="sendBtn" onclick="sendMessage()">↑</button>
+        <button class="send-btn" id="sendBtn">
+          Send
+        </button>
 
-    </div>
-
-    <div class="footer-note">
-      Your progress saves to this browser only. Return here on the same device to pick up where you left off.<br>
-      Prefer to talk? Hit the 🎤 and chat to me by voice note.
-    </div>
-
-    <div class="footer">
-      Nina Mistry · grow your audience, your way
+      </div>
     </div>
 
   </div>
-</div>
 
-<script>
-const messagesEl = document.getElementById("messages");
-let typingEl = document.getElementById("typing");
-const inputEl = document.getElementById("userInput");
-const sendBtn = document.getElementById("sendBtn");
+  <script>
+    const messages = document.getElementById("messages");
+    const input = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const voiceBtn = document.getElementById("voiceBtn");
 
-let isLoading = false;
+    let conversation = [];
 
-function adjustTextarea() {
-  inputEl.style.height = "auto";
-  inputEl.style.height = Math.min(inputEl.scrollHeight, 110) + "px";
-}
+    function addMessage(content, role) {
+      const div = document.createElement("div");
+      div.className = `message ${role}`;
+      div.textContent = content;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
 
-function pickStarter(btn) {
-  inputEl.value = btn.textContent;
-  sendMessage();
-}
+    async function sendMessage() {
+      const text = input.value.trim();
 
-function appendMessage(text, role) {
-  const div = document.createElement("div");
-  div.className = "msg " + role;
-  div.innerHTML = text.replace(/\n/g, "<br>");
-  messagesEl.insertBefore(div, typingEl);
-  scrollToBottom();
-}
+      if (!text) return;
 
-function scrollToBottom() {
-  requestAnimationFrame(() => {
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-  });
-}
+      addMessage(text, "user");
 
-async function sendMessage() {
+      conversation.push({
+        role: "user",
+        content: text
+      });
 
-  const text = inputEl.value.trim();
+      input.value = "";
 
-  if (!text || isLoading) return;
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            messages: conversation
+          })
+        });
 
-  isLoading = true;
-  sendBtn.disabled = true;
+        const data = await response.json();
 
-  appendMessage(text, "user");
+        addMessage(data.reply, "assistant");
 
-  inputEl.value = "";
-  adjustTextarea();
+        conversation.push({
+          role: "assistant",
+          content: data.reply
+        });
 
-  typingEl.style.display = "block";
+      } catch (error) {
+        console.error(error);
 
-  try {
+        addMessage(
+          "Something went wrong. Try again in a second.",
+          "assistant"
+        );
+      }
+    }
 
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        messages: [
-          {
-            role: "user",
-            content: text
-          }
-        ]
-      })
+    sendBtn.addEventListener("click", sendMessage);
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
     });
 
-    const data = await response.json();
+    // VOICE MODE
 
-    typingEl.style.display = "none";
+    const SpeechRecognition =
+      window.SpeechRecognition ||
+      window.webkitSpeechRecognition;
 
-    appendMessage(
-      data.reply || "Something went wrong. Try again.",
-      "bot"
-    );
+    if (SpeechRecognition) {
 
-  } catch (error) {
+      const recognition = new SpeechRecognition();
 
-    typingEl.style.display = "none";
+      recognition.lang = "en-GB";
+      recognition.interimResults = false;
+      recognition.continuous = false;
 
-    appendMessage(
-      "Something went wrong connecting to the assistant.",
-      "bot"
-    );
+      voiceBtn.addEventListener("click", () => {
+        recognition.start();
+        voiceBtn.classList.add("recording");
+      });
 
-    console.error(error);
-  }
+      recognition.onresult = (event) => {
+        const transcript =
+          event.results[0][0].transcript;
 
-  isLoading = false;
-  sendBtn.disabled = false;
-}
+        input.value = transcript;
+        voiceBtn.classList.remove("recording");
+      };
 
-function saveTranscript() {
-  alert("Transcript saved.");
-}
+      recognition.onerror = () => {
+        voiceBtn.classList.remove("recording");
+      };
 
-function startAgain() {
-  location.reload();
-}
+      recognition.onend = () => {
+        voiceBtn.classList.remove("recording");
+      };
 
-function toggleVoice() {
-  alert("Voice mode coming soon.");
-}
-</script>
+    } else {
 
+      voiceBtn.addEventListener("click", () => {
+        alert(
+          "Voice recognition is not supported in this browser. Try Chrome."
+        );
+      });
+
+    }
+  </script>
 </body>
 </html>
