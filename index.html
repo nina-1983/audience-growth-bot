@@ -2,10 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Audience Growth Bot</title>
 
   <style>
@@ -15,135 +12,105 @@
 
     body {
       margin: 0;
-      padding: 0;
-      background: #eef6f8;
+      background: #edf4f6;
       font-family: Inter, sans-serif;
-      color: #16333d;
       display: flex;
       justify-content: center;
       min-height: 100vh;
+      color: #17323d;
     }
 
     .app {
       width: 100%;
       max-width: 620px;
-      background: white;
       min-height: 100vh;
+      background: #f6fbfc;
       display: flex;
       flex-direction: column;
-      border-left: 1px solid #dbe8ec;
-      border-right: 1px solid #dbe8ec;
+      border-left: 1px solid #d8e7eb;
+      border-right: 1px solid #d8e7eb;
     }
 
     .header {
-      padding: 28px 24px 18px;
-      border-bottom: 1px solid #e7eff2;
-      background: linear-gradient(180deg, #144a93 0%, #1e5cab 100%);
+      background: linear-gradient(180deg, #144a93 0%, #1f5fb4 100%);
       color: white;
+      padding: 34px 30px 26px;
     }
 
     .header h1 {
       margin: 0;
-      font-size: 34px;
-      line-height: 1.05;
-      letter-spacing: -1px;
+      font-size: 44px;
+      line-height: 1;
+      letter-spacing: -2px;
       font-weight: 700;
     }
 
     .header p {
-      margin-top: 10px;
-      opacity: 0.9;
-      line-height: 1.5;
-      font-size: 15px;
+      margin-top: 16px;
+      font-size: 17px;
+      line-height: 1.6;
+      opacity: 0.95;
       max-width: 500px;
     }
 
     .messages {
       flex: 1;
-      padding: 22px;
+      padding: 26px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      background: #f7fbfc;
+      gap: 18px;
     }
 
     .message {
       max-width: 88%;
-      padding: 14px 16px;
-      border-radius: 18px;
-      line-height: 1.6;
-      font-size: 15px;
+      border-radius: 24px;
+      padding: 20px 22px;
+      font-size: 16px;
+      line-height: 1.8;
       white-space: pre-wrap;
     }
 
     .assistant {
       background: white;
-      border: 1px solid #dfecef;
+      border: 1px solid #dbe8ec;
       align-self: flex-start;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     }
 
     .user {
-      background: #d8f3f4;
+      background: #d8f0f2;
+      border: 1px solid #c0e2e6;
       align-self: flex-end;
-      border: 1px solid #b8e4e7;
     }
 
     .input-area {
-      padding: 18px;
-      border-top: 1px solid #dde9ed;
+      padding: 20px;
+      border-top: 1px solid #dbe8ec;
       background: white;
     }
 
     .input-wrap {
       display: flex;
-      gap: 10px;
       align-items: center;
-    }
-
-    textarea {
-      flex: 1;
-      resize: none;
-      border: 1px solid #cfe0e5;
-      border-radius: 16px;
-      padding: 14px;
-      font-size: 15px;
-      font-family: inherit;
-      outline: none;
-      min-height: 54px;
-      max-height: 180px;
-      line-height: 1.5;
-      background: #f9fcfd;
-    }
-
-    button {
-      border: none;
-      cursor: pointer;
-      transition: 0.2s ease;
-      font-family: inherit;
-    }
-
-    .send-btn {
-      background: #144a93;
-      color: white;
-      padding: 14px 18px;
-      border-radius: 14px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .send-btn:hover {
-      background: #103c77;
+      gap: 12px;
     }
 
     .voice-btn {
-      width: 50px;
-      height: 50px;
-      border-radius: 14px;
-      background: #dff4f6;
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      border: none;
+      background: #dff1f4;
       color: #144a93;
-      font-size: 20px;
+      font-size: 22px;
+      cursor: pointer;
       flex-shrink: 0;
+      transition: 0.2s ease;
+    }
+
+    .voice-btn:hover {
+      transform: translateY(-1px);
     }
 
     .voice-btn.recording {
@@ -152,13 +119,50 @@
       animation: pulse 1s infinite;
     }
 
+    textarea {
+      flex: 1;
+      resize: none;
+      border: 1px solid #d2e2e7;
+      border-radius: 20px;
+      padding: 18px 20px;
+      min-height: 58px;
+      max-height: 180px;
+      font-size: 16px;
+      line-height: 1.5;
+      font-family: inherit;
+      outline: none;
+      background: #f9fcfd;
+      color: #17323d;
+    }
+
+    textarea::placeholder {
+      color: #6f8891;
+    }
+
+    .send-btn {
+      border: none;
+      background: #144a93;
+      color: white;
+      border-radius: 18px;
+      padding: 0 24px;
+      height: 56px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .send-btn:hover {
+      background: #103c77;
+    }
+
     @keyframes pulse {
       0% {
         transform: scale(1);
       }
 
       50% {
-        transform: scale(1.05);
+        transform: scale(1.06);
       }
 
       100% {
@@ -167,40 +171,74 @@
     }
 
     @media (max-width: 640px) {
+
+      .header {
+        padding: 28px 22px 22px;
+      }
+
       .header h1 {
-        font-size: 28px;
+        font-size: 34px;
+      }
+
+      .header p {
+        font-size: 15px;
+      }
+
+      .messages {
+        padding: 18px;
       }
 
       .message {
-        font-size: 14px;
+        font-size: 15px;
+        padding: 18px;
+      }
+
+      .input-area {
+        padding: 16px;
       }
 
       textarea {
-        font-size: 14px;
+        font-size: 15px;
       }
+
+      .voice-btn {
+        width: 52px;
+        height: 52px;
+      }
+
+      .send-btn {
+        height: 52px;
+        padding: 0 18px;
+      }
+
     }
   </style>
 </head>
 
 <body>
+
   <div class="app">
 
     <div class="header">
       <h1>Audience Growth Bot</h1>
+
       <p>
         Okay. Let’s stop trying to solve all of it at once and figure out what actually matters first.
       </p>
     </div>
 
     <div class="messages" id="messages">
-      <div class="message assistant">
-        You probably don’t need more ideas right now.
 
-        You need a bit more clarity around what’s actually creating movement.
+      <div class="message assistant">
+You probably don’t need more ideas right now.
+
+You need a bit more clarity around what’s actually creating movement.
       </div>
+
     </div>
 
     <div class="input-area">
+
       <div class="input-wrap">
 
         <button class="voice-btn" id="voiceBtn">
@@ -217,11 +255,13 @@
         </button>
 
       </div>
+
     </div>
 
   </div>
 
   <script>
+
     const messages = document.getElementById("messages");
     const input = document.getElementById("messageInput");
     const sendBtn = document.getElementById("sendBtn");
@@ -230,14 +270,21 @@
     let conversation = [];
 
     function addMessage(content, role) {
+
       const div = document.createElement("div");
+
       div.className = `message ${role}`;
+
       div.textContent = content;
+
       messages.appendChild(div);
+
       messages.scrollTop = messages.scrollHeight;
+
     }
 
     async function sendMessage() {
+
       const text = input.value.trim();
 
       if (!text) return;
@@ -252,6 +299,7 @@
       input.value = "";
 
       try {
+
         const response = await fetch("/api/chat", {
           method: "POST",
           headers: {
@@ -272,22 +320,30 @@
         });
 
       } catch (error) {
+
         console.error(error);
 
         addMessage(
           "Something went wrong. Try again in a second.",
           "assistant"
         );
+
       }
+
     }
 
     sendBtn.addEventListener("click", sendMessage);
 
     input.addEventListener("keydown", (e) => {
+
       if (e.key === "Enter" && !e.shiftKey) {
+
         e.preventDefault();
+
         sendMessage();
+
       }
+
     });
 
     // VOICE MODE
@@ -305,35 +361,55 @@
       recognition.continuous = false;
 
       voiceBtn.addEventListener("click", () => {
+
         recognition.start();
+
         voiceBtn.classList.add("recording");
+
       });
 
       recognition.onresult = (event) => {
+
         const transcript =
           event.results[0][0].transcript;
 
         input.value = transcript;
+
         voiceBtn.classList.remove("recording");
+
       };
 
-      recognition.onerror = () => {
+      recognition.onerror = (event) => {
+
+        console.error(event.error);
+
         voiceBtn.classList.remove("recording");
+
+        alert(
+          "Voice recognition error. Try Chrome."
+        );
+
       };
 
       recognition.onend = () => {
+
         voiceBtn.classList.remove("recording");
+
       };
 
     } else {
 
       voiceBtn.addEventListener("click", () => {
+
         alert(
           "Voice recognition is not supported in this browser. Try Chrome."
         );
+
       });
 
     }
+
   </script>
+
 </body>
 </html>
