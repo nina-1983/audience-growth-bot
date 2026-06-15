@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#326ab3" />
-  <title>Ask Nina – Your audience, built around what you're actually selling</title>
+  <title>Grow with Nina</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
@@ -331,7 +331,7 @@
       <div class="header-avatar">♥</div>
 
       <div class="header-text">
-        <div class="name">Ask Nina</div>
+        <div class="name">Grow with Nina</div>
         <div class="subtitle">Your audience, built around what you're actually selling</div>
       </div>
 
@@ -385,7 +385,7 @@
     </div>
 
     <div class="footer">
-      Nina Mistry · your audience, built around what you're selling
+      Nina Mistry · Grow with Nina
     </div>
 
   </div>
@@ -403,8 +403,7 @@ let conversation = [];
 
 function adjustTextarea() {
   inputEl.style.height = "auto";
-  inputEl.style.height =
-    Math.min(inputEl.scrollHeight, 110) + "px";
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 110) + "px";
 }
 
 function pickStarter(btn) {
@@ -414,86 +413,43 @@ function pickStarter(btn) {
 }
 
 function appendMessage(text, role) {
-
   const div = document.createElement("div");
-
   div.className = "msg " + role;
-
   div.innerHTML = text.replace(/\n/g, "<br>");
-
   messagesEl.insertBefore(div, typingEl);
-
   scrollToBottom();
-
 }
 
 function scrollToBottom() {
-
   requestAnimationFrame(() => {
     messagesEl.scrollTop = messagesEl.scrollHeight;
   });
-
 }
 
 async function sendMessage() {
-
   const text = inputEl.value.trim();
-
   if (!text) return;
-
   appendMessage(text, "user");
-
-  conversation.push({
-    role: "user",
-    content: text
-  });
-
+  conversation.push({ role: "user", content: text });
   inputEl.value = "";
-
   adjustTextarea();
-
   typingEl.style.display = "block";
 
   try {
-
     const response = await fetch("/api/chat", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        messages: conversation
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: conversation })
     });
-
     const data = await response.json();
-
     typingEl.style.display = "none";
-
-    appendMessage(
-      data.reply ||
-      "Something went wrong. Try again in a second.",
-      "bot"
-    );
-
-    conversation.push({
-      role: "assistant",
-      content: data.reply
-    });
-
+    appendMessage(data.reply || "Something went wrong. Try again in a second.", "bot");
+    conversation.push({ role: "assistant", content: data.reply });
   } catch (error) {
-
     console.error(error);
-
     typingEl.style.display = "none";
-
-    appendMessage(
-      "Something went wrong. Try again in a second.",
-      "bot"
-    );
-
+    appendMessage("Something went wrong. Try again in a second.", "bot");
   }
-
 }
 
 function saveTranscript() {
@@ -507,112 +463,59 @@ function startAgain() {
 inputEl.addEventListener("input", adjustTextarea);
 
 inputEl.addEventListener("keydown", (event) => {
-
-  if (
-    event.key === "Enter" &&
-    !event.shiftKey
-  ) {
-
+  if (event.key === "Enter" && !event.shiftKey) {
     event.preventDefault();
-
     sendMessage();
-
   }
-
 });
 
-const SpeechRecognition =
-  window.SpeechRecognition ||
-  window.webkitSpeechRecognition;
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 if (SpeechRecognition) {
-
   recognition = new SpeechRecognition();
-
   recognition.lang = "en-GB";
-
   recognition.interimResults = false;
-
   recognition.continuous = false;
 
   recognition.onstart = () => {
-
     isRecording = true;
-
     micBtn.style.background = "#326ab3";
-
     micBtn.style.borderColor = "#326ab3";
-
     micBtn.querySelector("svg").style.fill = "#fff";
-
   };
 
   recognition.onend = () => {
-
     isRecording = false;
-
     micBtn.style.background = "#fff";
-
-    micBtn.style.borderColor =
-      "rgba(50,106,179,0.15)";
-
-    micBtn.querySelector("svg").style.fill =
-      "#326ab3";
-
+    micBtn.style.borderColor = "rgba(50,106,179,0.15)";
+    micBtn.querySelector("svg").style.fill = "#326ab3";
   };
 
   recognition.onerror = (event) => {
-
     console.error(event.error);
-
     isRecording = false;
-
     micBtn.style.background = "#fff";
-
-    micBtn.querySelector("svg").style.fill =
-      "#326ab3";
-
-    alert(
-      "Voice recognition error. Try Chrome."
-    );
-
+    micBtn.querySelector("svg").style.fill = "#326ab3";
+    alert("Voice recognition error. Try Chrome.");
   };
 
   recognition.onresult = (event) => {
-
-    const transcript =
-      event.results[0][0].transcript;
-
+    const transcript = event.results[0][0].transcript;
     inputEl.value = transcript;
-
     adjustTextarea();
-
   };
-
 }
 
 function toggleVoice() {
-
   if (!SpeechRecognition) {
-
-    alert(
-      "Voice recognition is not supported in this browser. Try Chrome."
-    );
-
+    alert("Voice recognition is not supported in this browser. Try Chrome.");
     return;
-
   }
-
   if (isRecording) {
-
     recognition.stop();
-
   } else {
-
     recognition.start();
-
   }
-
 }
 </script>
 
